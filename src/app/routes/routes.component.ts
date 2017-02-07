@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DigitransitService} from "../services/digitransit.service";
 import {tryCatch} from "rxjs/util/tryCatch";
 import {Router} from "@angular/router";
+import any = jasmine.any;
 
 @Component({
   selector: 'app-routes',
@@ -11,7 +12,9 @@ import {Router} from "@angular/router";
 export class RoutesComponent implements OnInit {
 
   private routes: any = [];
-  private user: any;
+  private user: any = {};
+  private key: string = 'AIzaSyCHIVY0i3gWbOxw6tXlZDIToBSc01ja1q4';
+  private time: any = Date.now();
 
   constructor(private digitransitService: DigitransitService, private router: Router) {
   }
@@ -38,12 +41,14 @@ export class RoutesComponent implements OnInit {
     console.log(line);
     this.digitransitService.getBus(line).subscribe(
       (resp) => {
-        // console.log(resp[Object.keys(resp)[0]].VP.lat);
+        console.log(resp);
         // console.log(resp[Object.keys(resp)[0]].VP.long);
         try {
           const lat = resp[Object.keys(resp)[0]].VP.lat;
           const lon = resp[Object.keys(resp)[0]].VP.long;
-          window.open(`https://maps.google.fi/maps/place/${lat}+${lon}`);
+          this.time = resp[Object.keys(resp)[0]].VP.tst;
+          window.open(`https://www.google.com/maps/embed/v1/place?key=${this.key}&q=${lat},${lon}`, "mappi"
+);
         } catch (e) {
           alert('Not in transit.');
         }
